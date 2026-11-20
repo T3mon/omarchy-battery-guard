@@ -13,6 +13,9 @@ assert.strictEqual(M.withSetting({}, "travel", true).travel, true)
 
 assert.strictEqual(M.level(null), -1)
 assert.strictEqual(M.level({ isPresent: true, percentage: 0.794 }), 79)
+assert.strictEqual(M.level({ isPresent: true, percentage: 0 }), -1)
+assert.strictEqual(M.level({ isPresent: true, ready: false, percentage: 0.5 }), -1)
+assert.strictEqual(M.level({ isPresent: true, ready: true, percentage: 0.5 }), 50)
 
 assert.strictEqual(M.wantedReminder(20, true, cfg), "plugIn")
 assert.strictEqual(M.wantedReminder(21, true, cfg), "")

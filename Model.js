@@ -32,8 +32,9 @@ function withSetting(settings, key, value) {
 }
 
 function level(device) {
-  if (!device || !device.isPresent) return -1
-  return Math.round(Number(device.percentage || 0) * 100)
+  if (!device || !device.isPresent || device.ready === false) return -1
+  var pct = Math.round(Number(device.percentage || 0) * 100)
+  return pct > 0 ? pct : -1
 }
 
 function wantedReminder(pct, onBattery, cfg) {

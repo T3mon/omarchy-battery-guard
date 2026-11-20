@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "id": "t3mon.battery-guard",
+  "name": "Battery Guard",
+  "version": "1.0.0",
+  "author": "T3mon",
+  "license": "MIT",
+  "description": "Reminders to keep your battery between 20% and 80%, with a travel mode for full charges",
+  "kinds": [
+    "bar-widget"
+  ],
+  "entryPoints": {
+    "barWidget": "Panel.qml"
+  },
+  "barWidget": {
+    "displayName": "Battery Guard",
+    "description": "Reminds you to plug in at 20% and unplug at 80%. Travel mode charges to 100%.",
+    "category": "System",
+    "allowMultiple": false,
+    "defaultSection": "right",
+    "schema": [
+      {
+        "key": "showPercentage",
+        "type": "boolean",
+        "label": "Show percentage",
+        "description": "Display the battery percentage next to the icon.",
+        "defaultValue": false
+      }
+    ]
+  }
+}

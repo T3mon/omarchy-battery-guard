@@ -15,7 +15,7 @@ omarchy plugin add https://github.com/T3mon/omarchy-battery-guard.git --enable
 
 ## Use
 
-- Left click the shield icon to open the panel.
+- Left click the battery icon to open the panel.
 - Right click it to switch between Daily and Travel.
 - The unplug notification has a **Travel mode** button. The 100% notification has a **Back to Daily** button.
 

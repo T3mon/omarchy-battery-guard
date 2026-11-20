@@ -108,6 +108,14 @@ function flow(info, onBattery) {
   return "idle"
 }
 
+function batteryGlyph(pct, plugged) {
+  if (pct < 0) return "󰂑"
+  var charging = ["󰢜", "󰂆", "󰂇", "󰂈", "󰢝", "󰂉", "󰢞", "󰂊", "󰂋", "󰂅"]
+  var normal = ["󰁺", "󰁻", "󰁼", "󰁽", "󰁾", "󰁿", "󰂀", "󰂁", "󰂂", "󰁹"]
+  var i = Math.max(0, Math.min(9, Math.floor(pct / 10)))
+  return plugged ? charging[i] : normal[i]
+}
+
 if (typeof module !== "undefined") {
-  module.exports = { DEFAULTS: DEFAULTS, readSettings: readSettings, withSetting: withSetting, level: level, wantedReminder: wantedReminder, step: step, statusKey: statusKey, parseKeyValue: parseKeyValue, parseProfiles: parseProfiles, profileIcon: profileIcon, parsePalette: parsePalette, flow: flow }
+  module.exports = { DEFAULTS: DEFAULTS, readSettings: readSettings, withSetting: withSetting, level: level, wantedReminder: wantedReminder, step: step, statusKey: statusKey, parseKeyValue: parseKeyValue, parseProfiles: parseProfiles, profileIcon: profileIcon, parsePalette: parsePalette, flow: flow, batteryGlyph: batteryGlyph }
 }

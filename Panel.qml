@@ -22,7 +22,7 @@ Panel {
   readonly property color fg: root.bar ? root.bar.foreground : Commons.Color.foreground
   readonly property color muted: Qt.darker(root.fg, 1.4)
   readonly property color warn: root.reminderKind === "plugIn" ? Commons.Color.urgent : Commons.Color.accent
-  readonly property string glyph: root.cfg.travel ? "󰀝" : "󰕥"
+  readonly property string glyph: Model.batteryGlyph(root.pct, !root.batteryPowered)
 
   property int cursor: 0
   property bool cursorActive: false
@@ -72,7 +72,7 @@ Panel {
     if (on === root.cfg.travel) return
     root.save("travel", on)
     if (on) root.notify("󰀝", root.tr("notify.travelOn"), root.tr("notify.travelOnBody"), "low", [])
-    else root.notify("󰕥", root.tr("notify.dailyOn"), root.tr("notify.dailyOnBody", root.num(root.cfg.low), root.num(root.cfg.high)), "low", [])
+    else root.notify("󰁿", root.tr("notify.dailyOn"), root.tr("notify.dailyOnBody", root.num(root.cfg.low), root.num(root.cfg.high)), "low", [])
   }
 
   function nudge(dir) {
@@ -438,7 +438,7 @@ Panel {
 
             Button {
               width: modeRow.cell
-              iconText: "󰕥"
+              iconText: "󰁿"
               iconSize: Style.font.title
               text: root.tr("mode.daily") + "  " + root.tr("mode.dailyRange", root.num(root.cfg.low), root.num(root.cfg.high))
               fontSize: Style.font.bodySmall

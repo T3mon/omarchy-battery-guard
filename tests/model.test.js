@@ -53,4 +53,7 @@ assert.strictEqual(M.parsePalette('yellow = "#ebcb8b"\ngreen = "#a3be8c"').green
 assert.strictEqual(M.flow({ state: "charging" }, false), "charging")
 assert.strictEqual(M.flow({ state: "holding" }, false), "idle")
 assert.strictEqual(M.flow({}, true), "discharging")
+assert.strictEqual(M.batteryGlyph(85, false), "󰂂")
+assert.strictEqual(M.batteryGlyph(100, true), "󰂅")
+assert.strictEqual(M.batteryGlyph(-1, false), "󰂑")
 console.log("ok")

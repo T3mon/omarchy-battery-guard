@@ -47,6 +47,8 @@ Panel {
     property string kind: ""
     property real at: 0
     property int notifyId: 0
+    property bool reminderShown: false
+    property string reminderTitle: ""
   }
 
   function tr(key, a, b) {
@@ -170,6 +172,7 @@ Panel {
   property var queued: null
 
   function notify(glyph, title, body, urgency, actions) {
+    memo.reminderShown = false
     root.queued = { glyph: glyph, title: title, body: body, urgency: urgency, actions: actions }
     if (!notifyProc.running) root.flush()
   }
@@ -188,17 +191,34 @@ Panel {
 
   function check() {
     if (!root.present) return
+    var prev = memo.kind
     var res = Model.step({ kind: memo.kind, at: memo.at }, root.reminderKind, Date.now(), root.cfg)
     memo.kind = res.memory.kind
     memo.at = res.memory.at
+    if (prev !== "" && memo.kind === "" && memo.reminderShown) root.dismissReminder()
     if (!res.notify) return
     var p = root.num(root.pct)
-    if (memo.kind === "plugIn")
-      root.notify("󰂃", root.tr("notify.plugInTitle", p), root.tr("notify.plugInBody", root.num(root.cfg.low)), "critical", [])
-    else if (memo.kind === "unplug")
-      root.notify("󰂄", root.tr("notify.unplugTitle", p), root.tr("notify.unplugBody"), "normal", [{ label: root.tr("notify.travelAction"), call: "travelOn" }])
-    else if (memo.kind === "full")
-      root.notify("󰁹", root.tr("notify.fullTitle"), root.tr("notify.fullBody"), "normal", [{ label: root.tr("notify.dailyAction"), call: "travelOff" }])
+    var title = ""
+    if (memo.kind === "plugIn") {
+      title = root.tr("notify.plugInTitle", p)
+      root.notify("󰂃", title, root.tr("notify.plugInBody", root.num(root.cfg.low)), "critical", [])
+    } else if (memo.kind === "unplug") {
+      title = root.tr("notify.unplugTitle", p)
+      root.notify("󰂄", title, root.tr("notify.unplugBody"), "normal", [{ label: root.tr("notify.travelAction"), call: "travelOn" }])
+    } else if (memo.kind === "full") {
+      title = root.tr("notify.fullTitle")
+      root.notify("󰁹", title, root.tr("notify.fullBody"), "normal", [{ label: root.tr("notify.dailyAction"), call: "travelOff" }])
+    }
+    memo.reminderShown = true
+    memo.reminderTitle = title
+  }
+
+  function dismissReminder() {
+    memo.reminderShown = false
+    root.queued = null
+    if (memo.reminderTitle === "") return
+    dismissProc.command = ["omarchy-shell", "-q", "notifications", "dismiss", memo.reminderTitle]
+    dismissProc.running = true
   }
 
   onReminderKindChanged: root.check()
@@ -222,6 +242,8 @@ Panel {
     }
     onExited: Qt.callLater(root.flush)
   }
+
+  Process { id: dismissProc }
 
   ShellIpc {
     target: "t3mon.battery-guard"
